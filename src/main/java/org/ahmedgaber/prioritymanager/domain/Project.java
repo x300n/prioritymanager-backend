@@ -47,6 +47,9 @@ public class Project {
         this.updated_At = new Date();
     }
 
+    public Project() {
+    }
+
     public Long getId() {
         return id;
     }
