@@ -1,4 +1,4 @@
-package org.ahmedgaber.prioritymanager.services;
+package org.ahmedgaber.prioritymanager.exceptions;
 
 import org.ahmedgaber.prioritymanager.domain.Project;
 import org.springframework.http.HttpStatus;
