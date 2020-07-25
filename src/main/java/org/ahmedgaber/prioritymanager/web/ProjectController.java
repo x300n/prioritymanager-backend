@@ -2,6 +2,7 @@ package org.ahmedgaber.prioritymanager.web;
 
 
 import org.ahmedgaber.prioritymanager.domain.Project;
+import org.ahmedgaber.prioritymanager.services.MapValidationError;
 import org.ahmedgaber.prioritymanager.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,28 +23,21 @@ import java.util.Map;
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final MapValidationError mapValidationError;
 
     @Autowired
     public ProjectController(ProjectService projectService) {
         this.projectService = projectService;
+        mapValidationError = new MapValidationError();
     }
 
     @PostMapping("")
     public ResponseEntity<?> createNewProject(@Valid @RequestBody Project project, BindingResult result) {
 
-        if(result.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for(FieldError m: result.getFieldErrors()) {
-                errorMap.put(m.getField(), m.getDefaultMessage());
-            }
-
-            return new ResponseEntity<Map<String, String>>(errorMap, HttpStatus.BAD_REQUEST);
-        }
+        ResponseEntity<?> errorMap = MapValidationError.getResponseEntity(result);
+        if (errorMap != null) return errorMap;
 
         Project project1 = projectService.saveOrUpdateProject(project);
         return new ResponseEntity<Project>(project, HttpStatus.CREATED);
     }
-
-
 }
